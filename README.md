@@ -28,7 +28,7 @@ El formato de los archivos será similar al siguiente:
 8. descripción de cada uno de los CE
 9. id y descripción de los instrumentos usados para calcular la nota de los CE. Ten en cuenta que a continuación está el peso en porcentaje, que tiene cada instrumento.
 10. notas de los instrumentos.
-11. área de calculo, en el que se tendrán que calcular las otras de CE y RA.
+11. área de calculo, en el que se tendrán que calcular las notas de los CE y RA.
 
 ![](./assets/csv2.png)
 
