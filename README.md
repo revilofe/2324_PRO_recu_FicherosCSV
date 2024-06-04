@@ -95,6 +95,49 @@ Conforme se vayan procesando archivos, se tendrán que incorporar los nuevos ele
 
 En el que se podrá seleccionar los alumnos y mostrará un resumen de sus notas, tal y como se ve en la imagen anterior.
 
+Para la base de datos podéis utilizar H2 con el siguiente modelo simplificado, no óptimo, ni normalizado, pero suficiente para almacenar la información necesaria y dedicaros a mostrarnos vuestros conocimientos de programación.
+
+```
+CREATE TABLE Alumno (
+	idAlumno VARCHAR(3) NOT NULL,
+	nombre VARCHAR(255) NOT NULL,
+	PRIMARY KEY (idAlumno)
+);
+
+CREATE TABLE AlumnoRA (
+	idAlumno VARCHAR(3) NOT NULL,
+	idModulo VARCHAR(3) NOT NULL,
+	idRA INT NOT NULL,
+	desc VARCHAR(255),
+	porcentaje NUMBER,
+	nota NUMBER,
+	PRIMARY KEY (idAlumno, idModulo, idRA)
+);
+
+CREATE TABLE AlumnoCE (
+	idAlumno VARCHAR(3) NOT NULL,
+	idModulo VARCHAR(3) NOT NULL,
+	idRA INT NOT NULL,
+	idCE VARCHAR(1) NOT NULL,
+	desc VARCHAR(255),
+	porcentaje NUMBER,
+	nota NUMBER,
+	PRIMARY KEY (idAlumno, idModulo, idRA, idCE)
+);
+
+ALTER TABLE AlumnoRA
+ADD FOREIGN KEY (idAlumno)
+REFERENCES Alumno(idAlumno);
+
+ALTER TABLE AlumnoCE
+ADD FOREIGN KEY (idAlumno)
+REFERENCES Alumno(idAlumno);
+
+ALTER TABLE AlumnoCE
+ADD FOREIGN KEY (idAlumno, idModulo, idRA)
+REFERENCES AlumnoRA(idAlumno, idModulo, idRA);
+```
+
 **Trabajo a realizar:**
 
 1. Trabajar sobre el formato de los datos y el parseo de estos.
