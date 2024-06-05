@@ -6,7 +6,7 @@
 
 ---
 
-### Descripción:
+### 1. Descripción:
 
 La actividad consiste en procesar *un conjunto de archivos* en formato csv, que están almacenados en una carpeta.
 
@@ -37,47 +37,50 @@ El formato de los archivos será similar al siguiente:
 
 > nota: Cualquier duda sobre el formato, aclárala antes de continuar.
 
-#### Opciones de ejecución del programa.
+### 2. Opciones de ejecución del programa.
 
 Estas opciones se le tienen que indicar al programa al ejecutarlo:
 
-- `-mo`: indica al programa el `módulo`. Si no se indica nada, se asume el módulo de programación, que se identifica como `PRO`.
-  `recu -mo PRO`
-- `-pi`: indica al programa la carpeta origen en la que se encuentran los archivos a procesar.
-  `recu -pi <pathALaCarpeta>`
-- `-bd`: indica al programa que la información que se muestra por pantalla tiene que quedar reflejada en base de datos.  Si ya existe, tendrá que actualizarse.
-  `recu -bd`
-- `-bd d`: indica al programa que borre la información que hay en la base de datos, quedando limpia de toda información.
-  `recu -bd d`
-- `-bd q`: indica al programa que consulte la información que hay en la base de datos. Mostrando por consola en el mismo formato indicado anteriormente.
-  `recu -bd q`
+- `-pi`: indica al programa que se procese los archivos y la carpeta origen en la que se encuentran los archivos a procesar. Si no se indica nada, se asume la carpeta actual. Como resultado del procesamiento deberá mostrar por consola según el formato indicado en 3.2.1 las calificaciones de los elementos (RA, CE) del módulo por alumno y actualizar el archivo con las calificaciones de los elementos (RA, CE) del módulo por alumno. 
+    `$ recu -pi /home/usuario/csvfiles`
+- `-mo`: complementa a `-pi`, e indica al programa el `módulo`. Esta opción indica al programa que tiene que procesar los archivos de calificaciones de un módulo concreto. Si no se indica nada, se asume el módulo de programación, que se identifica como `PRO`. Si se indica solo, se mostrará por consola las calificaciones de los elementos (RA, CE) del módulo por alumno.
+    `$ recu -pi /home/usuario/csvfiles -mo PRO -bd`
+- `-bd`: complementa a `-pi`, e indica al programa que la información que se muestra por pantalla tiene que quedar almacenada en base de datos. Si ya existe, tendrá que actualizarse.   
+    `$ recu -pi /home/usuario/csvfiles -bd`
+- `-bd q`: indica al programa que consulte la información que hay en la base de datos. Mostrando por consola según el formato indicado en 3.2.1. Esta opción es excluyente con cualquier otra opción.
+    `$ recu -bd q`
+- `-bd qi`: indica al programa que consulte la información que hay en la base de datos. Mostrando esta a través de la interface gráfica, según el formato indicado en 3.2.2. Esta opción es excluyente con cualquier otra opción.
+    `$ recu -bd qi`
+- `-bd d`: indica al programa que borre la información que hay en la base de datos, quedando limpia de toda información. Esta opción es excluyente con cualquier otra opción.  
+    `$ recu -bd d`
 
 > nota: es posible la combinación de los parámetros anteriores siempre y cuando tengan sentido, por ejemplo puedo indicarle:
 > `recu -mo PRO -pi /home/usuario/csvfiles -bd`
 
-#### Lectura y parseo del archivo
+### 3. Lectura/Escritura de archivo y Salidas del programa.
 
-##### [*]
+#### 3.1. Lectura y escritura
 
-La ruta a la carpeta en la que se encuentran los archivos csv se pasará como parámetro cuando se ejecute el programa. El programa deberá procesar todos los archivos que encuentre en la carpeta.
+La ruta a la carpeta en la que se encuentran los archivos csv se pasará con la opción `-pi` cuando se ejecute el programa. El programa deberá procesar todos los archivos que encuentre en la carpeta, y se asumen que pertenecen a un módulo concreto.
 
 > Nota: Para el procesamiento de los archivos no se podrá usar ninguna biblioteca adicional que no sea la clase `FILE` y demás clases que permite leer y escribir en archivos.
 
-#### Salida
+Tras cada procesamiento, el archivo que se está procesando, se modificará para dejar constancia de las calificacioens que se han obtenido en los distintos elementos (RAs, CEs). Inicialmente se podrá pasar vacío, pero en posteriores llamadas es posible que las calificaciones ya estén establecidas y, por tanto, se tendrán que actualizar con los nuevos valores calculados.
 
-##### [*] **Consola**
+![](./assets/csv2.png)
+
+#### 3.2. Salidas
+
+Una vez se haya procesado la información mediante la opcion `-pi`, el programa tiene que actuar de la siguiente forma:  
+
+##### 3.2.1 Consola
 
 El programa mostrará como salida, en formato tabla, las calificaciones del módulo teniendo en cuenta que ésta calificación se calcula en base a la nota acumulada de todos los archivos procesados, es decir, la calificación de los resultados de aprendizaje, las calificaciones de los criterios de evaluación. En la tabla tiene que aparecer el id de cada uno de los elementos (Módulo, RAs, CEs), la descripción y finalmente la calificación. Las tablas serán similares al siguiente diseño:
 
 ![](assets/tablaConsola.png)
 
-##### [*] **Archivo**
 
-Tras cada procesamiento, el archivo que se pasa como entrada se modificará para dejar constancia de las calificacioens que se han obtenido en los distintos elementos (RAs, CEs). Inicialmente se podrá pasar vacio, pero en posteriores llamadas es posible que las calificaciones ya estén establecidas y por tanto se tendrán que actualizar con los nuevos valores calculados.
-
-![](./assets/csv2.png)
-
-##### [U7] **Interface gráfica**
+##### 3.2.2 Interface gráfica
 
 De igual forma, el programa mostrará en la interfaz gráfica las calificaciones, en un diseño similar al siguiente:
 
@@ -85,15 +88,27 @@ De igual forma, el programa mostrará en la interfaz gráfica las calificaciones
 
 En el que se podrá seleccionar los alumnos y mostrará un resumen de sus notas, tal y como se ve en la imagen anterior.
 
-##### [U9] **base de ddtos**
+### 4. Base de datos.
 
-De igual forma, el programa almacenará en base de datos los resultados de procesar los archivos, quedando constancia de las calificaciones del alumnado para los distintos elementos que forman parte de estas. (Módulo, RAs, CEs).
+El programa deberá almacenar en base de datos los resultados de procesar los archivos.
 
-Conforme se vayan procesando archivos, se tendrán que incorporar los nuevos elementos y actualizar la calificación del módulo.
+#### 4.1. Opciones de ejecución del programa relacionadas con la base de datos.
+
+El programa, cuando reciba la opción `-bd`, almacenará en base de datos los resultados de procesar los archivos, quedando constancia de las calificaciones del alumnado para los distintos elementos que forman parte de estas. (Módulo, RAs, CEs).
+
+Conforme se vayan procesando archivos, siempre que se indique la opción `-bd`, se tendrán que incorporar los nuevos elementos y actualizar la calificación del módulo.
+
+La opción `-bd q` permitirá consultlar la información de la base de datos, mostrando por consola según el formato indicado en 3.2.1.
+
+La opción `-bd qi` permitirá consultlar la información de la base de datos, mostrando esta a través de la interface gráfica, según el formato indicado en 3.2.2.
+
+La opción `-bd d` permitirá borrar la información de la base de datos, quedando limpia de toda información.
 
 ![](./assets/csv2.png)
 
-En el que se podrá seleccionar los alumnos y mostrará un resumen de sus notas, tal y como se ve en la imagen anterior.
+En el que se podrá seleccionar los alumnos y mostrará un resumen de sus notas, tal y como se ve en 3.2.2.
+
+#### 4.2. Modelo de Base de datos
 
 Para la base de datos podéis utilizar H2 con el siguiente modelo simplificado, no óptimo, ni normalizado, pero suficiente para almacenar la información necesaria y dedicaros a mostrarnos vuestros conocimientos de programación.
 
@@ -138,34 +153,36 @@ ADD FOREIGN KEY (idAlumno, idModulo, idRA)
 REFERENCES AlumnoRA(idAlumno, idModulo, idRA);
 ```
 
-**Trabajo a realizar:**
+### 5. Recomendaciones
 
-1. Trabajar sobre el formato de los datos y el parseo de estos.
-2. Trabajar sobre el parseo de argumentos pasados al ejecutar el programa.
-3. Separa la entrada de datos, procesamiento de datos, salida de datos.
-4. Usa patrones de diseño, jerarquia de clases.
-5. Asigna una única responsabilidad por clase, y por métodos.
-6. Pon nombres coherentes y adecuados a la responsabilidad que realiza la clase (Sustantivos) /métodos (verbos)
-7. Construir una estructura de datos/clases que soporte lainformación en memoria y facilite realizar las tareas de procesamiento de la información.
+1. Trabajar sobre el parseo de argumentos pasados al ejecutar el programa.   
+2. Trabajar sobre el formato de los datos y el parseo de estos.   
+3. Separa la entrada de datos, procesamiento de datos, salida de datos.   
+4. Usa patrones de diseño, jerarquía de clases.   
+5. Asigna una única responsabilidad por clase, y por métodos.   
+6. Pon nombres coherentes y adecuados a la responsabilidad que realiza la clase (Sustantivos) /métodos (verbos).    
+7. Construir una estructura de datos/clases que soporte la información en memoria y facilite realizar las tareas de procesamiento de la información.   
 8. Trabajar por partes las distintas salidas:
    a. salida a ficheros.
    b. salida a consola.
    c. salida a base de datos.
    d. interface gráfica.
-9. Documentar y comentar.
-10. Genera el ejecutable.
-11. Crear las capturas de pantallas de aquellas ejecuciones y opciones que funcionen.
+9. Documentar y comentar.    
+10. Genera el ejecutable.    
+11. Crear las capturas de pantallas de aquellas ejecuciones y opciones que funcionen.    
+12. No olvides crear el ejecutable del programa.
+13. Haz una buena gestión de errores, mostrando mensajes claros y concisos.
 
-### Recursos
+### 6. Recursos
 
 * Apuntes dado en clase
 * Recursos vistos en clase.
 
-### Evaluación y calificación
+### 7. Evaluación y calificación
 
-#### RA y CE evaluados:
+Se trabajan prácticamente todas las unidades, con su RA y CE asociados, aunque sólo se evaluan unidades 7 y 9. No obstante no se puede olvidar nada de lo aprendido en las unidades anteriores, ya que forman parte de la base de conocimientos necesarios para poder realizar la actividad.
 
-Se evaluarán las siguientes unidades, con su RA y CE asociados.
+#### 7.1. Unidades: Criterios de evaluación
 
 ##### Unidad 4.
 
@@ -203,16 +220,16 @@ a) Se han identificado las características y métodos de acceso a sistemas gest
 b) Se han creado programas en las que crear conexiones con bases de datos, para c) almacenar información en bases de datos, d) recuperar y mostrar información almacenada en bases de datos, efectuar e) borrados y modificaciones sobre la información almacenada y f) que ejecuten consultas sobre bases de datos.
 g) Se han creado aplicaciones para posibilitar la gestión de información presente en bases de datos relacionales.
 
-#### **Rubrica**:
+#### 7.2. Rúbrica
 
 Se construirá en base a la información anterior.
 
 **Conlleva presentación**: SI
 
-### Entrega
+### 8. Entrega
 
-> **La actividad tiene que cumplir las condiciones de entrega para poder ser calificada. En caso de no cumplirlas podría calificarse como no entregada.
+> **La actividad tiene que cumplir las condiciones de entrega para poder ser calificada. En caso de no cumplirlas podría calificarse como no entregada.**
 
-* **Conlleva la entrega de capturas de pantallas de las distintas opciones:** Se entregará un documento que contendrán capturas de pantalla de las distintas ejecuciones del programa, mostrando aquellas que funcionan correctamente. Solo se pasará a evaluar aquellas que tengan una captura de pantalla sobre su funcionamiento.
-* **Conlleva la entrega un ejecutable del programa:** Se tendrá que entregar un enlace al ejecutable del programa, de forma que se pueda probar sin necesidad de ejecutar el IDE. Este enlace puede estar en github.
 * **Conlleva la entrega de URL a repositorio:** El contenido se entregará en un repositorio github, y en caso de creerlo necesario se trabajará por proyectos dejando constancia de las acciones realizas según cada uno de los perfiles de los usuarios del grupo.
+* **Conlleva la entrega de capturas de pantallas de las distintas opciones:** Se entregará un documento (markdown en la raíz del repositorio con nombre Recu_PRO_<Iniciales>.md) que contendrán capturas de pantalla de las distintas ejecuciones del programa, mostrando aquellas que funcionan correctamente. *Solo se pasará a evaluar aquellas que tengan una captura de pantalla sobre su funcionamiento*.
+* **Conlleva la entrega un ejecutable del programa:** Se tendrá que entregar un enlace al ejecutable del programa, de forma que se pueda probar sin necesidad de ejecutar el IDE. Este enlace estará en un documento (markdown en la raíz del repositorio).
